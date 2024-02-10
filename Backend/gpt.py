@@ -7,7 +7,7 @@ from termcolor import colored
 
 def generate_script(video_subject: str) -> str:
     """
-    Generate a script for a video, depending on the subject of the video.
+    Generate a script for a 2-minute short video about parallel universes.
 
     Args:
         video_subject (str): The subject of the video.
@@ -18,21 +18,10 @@ def generate_script(video_subject: str) -> str:
 
     # Build prompt
     prompt = f"""
-    Generate a script for a video, depending on the subject of the video.
-    Subject: {video_subject}
+    Generate a script for a 2-minute short video about {video_subject}.
+    Provide engaging content exploring the topic in depth.
 
-    The script is to be returned as a string.
-
-    Here is an example of a string:
-    "This is an example string."
-
-    Do not under any circumstance reference this prompt in your response.
-
-    Get straight to the point, don't start with unnecessary things like, "welcome to this video".
-
-    Obviously, the script should be related to the subject of the video.
-
-    ONLY RETURN THE RAW CONTENT OF THE SCRIPT. DO NOT INCLUDE "VOICEOVER", "NARRATOR" OR SIMILAR INDICATORS OF WHAT SHOULD BE SPOKEN AT THE BEGINNING OF EACH PARAGRAPH OR LINE.
+    Ensure the script is in a continuous paragraph style without any scene descriptions, character actions, or dialogue tags.
     """
 
     # Generate script
@@ -63,10 +52,6 @@ def clean_script(script: str) -> str:
     Returns:
         str: The cleaned script.
     """
-    # Remove asterisks, hashes
-    script = script.replace("*", "")
-    script = script.replace("#", "")
-
     # Remove markdown syntax
     script = re.sub(r'\[.*\]', '', script)
     script = re.sub(r'\(.*\)', '', script)
@@ -91,12 +76,7 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
     # Build prompt
     prompt = f"""
     Generate {amount} search terms for stock videos,
-    depending on the subject of a video.
-    Subject: {video_subject}
-
-    The search terms are to be returned as
-    a JSON-Array of strings.
-
+    depending on the subject of a 2-minute short video about {video_subject}.
     Each search term should consist of 1-3 words,
     always add the main subject of the video.
     
@@ -105,11 +85,6 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
     YOU MUST NOT RETURN THE SCRIPT.
     
     The search terms must be related to the subject of the video.
-    Here is an example of a JSON-Array of strings:
-    ["search term 1", "search term 2", "search term 3"]
-
-    For context, here is the full text:
-    {script}
     """
 
     # Generate search terms
