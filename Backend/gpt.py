@@ -1,7 +1,7 @@
 import re
 import json
 import g4f
-from typing import Tuple, List  
+from typing import Tuple, List
 from termcolor import colored
 
 
@@ -46,17 +46,32 @@ def generate_script(video_subject: str) -> str:
     # Return the generated script
     if response:
         # Clean the script
-        # Remove asterisks, hashes
-        response = response.replace("*", "")
-        response = response.replace("#", "")
-
-        # Remove markdown syntax
-        response = re.sub(r'\[.*\]', '', response)
-        response = re.sub(r'\(.*\)', '', response)
+        response = clean_script(response)
 
         return f"{response} "
     print(colored("[-] GPT returned an empty response.", "red"))
     return None
+
+
+def clean_script(script: str) -> str:
+    """
+    Clean the generated script by removing markdown syntax and special characters.
+
+    Args:
+        script (str): The generated script.
+
+    Returns:
+        str: The cleaned script.
+    """
+    # Remove asterisks, hashes
+    script = script.replace("*", "")
+    script = script.replace("#", "")
+
+    # Remove markdown syntax
+    script = re.sub(r'\[.*\]', '', script)
+    script = re.sub(r'\(.*\)', '', script)
+
+    return script.strip()
 
 
 def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
@@ -124,49 +139,49 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
     # Return search terms
     return search_terms
 
-def generate_metadata(video_subject: str, script: str) -> Tuple[str, str, List[str]]:  
-    """  
-    Generate metadata for a YouTube video, including the title, description, and keywords.  
-  
-    Args:  
-        video_subject (str): The subject of the video.  
-        script (str): The script of the video.  
-  
-    Returns:  
-        Tuple[str, str, List[str]]: The title, description, and keywords for the video.  
-    """  
-  
-    # Build prompt for title  
+def generate_metadata(video_subject: str, script: str) -> Tuple[str, str, List[str]]:
+    """
+    Generate metadata for a YouTube video, including the title, description, and keywords.
+
+    Args:
+        video_subject (str): The subject of the video.
+        script (str): The script of the video.
+
+    Returns:
+        Tuple[str, str, List[str]]: The title, description, and keywords for the video.
+    """
+
+    # Build prompt for title
     title_prompt = f"""  
     Generate a catchy and SEO-friendly title for a YouTube shorts video about {video_subject}.  
-    """  
-  
-    # Generate title  
-    title_response = g4f.ChatCompletion.create(  
-        model=g4f.models.gpt_35_turbo_16k_0613,  
-        messages=[{"role": "user", "content": title_prompt}],  
-    )  
-  
-    # Extract title from response  
-    title = title_response.strip()  # Assuming title_response is a string  
-  
-    # Build prompt for description  
+    """
+
+    # Generate title
+    title_response = g4f.ChatCompletion.create(
+        model=g4f.models.gpt_35_turbo_16k_0613,
+        messages=[{"role": "user", "content": title_prompt}],
+    )
+
+    # Extract title from response
+    title = title_response.strip()  # Assuming title_response is a string
+
+    # Build prompt for description
     description_prompt = f"""  
     Write a brief and engaging description for a YouTube shorts video about {video_subject}.  
     The video is based on the following script:  
     {script}  
-    """  
-  
-    # Generate description  
-    description_response = g4f.ChatCompletion.create(  
-        model=g4f.models.gpt_35_turbo_16k_0613,  
-        messages=[{"role": "user", "content": description_prompt}],  
-    )  
-  
-    # Extract description from response  
-    description = description_response.strip()  # Assuming description_response is a string  
-  
-    # Generate keywords  
-    keywords = get_search_terms(video_subject, 6, script)  # Assuming you want 6 keywords  
-  
-    return title, description, keywords  
+    """
+
+    # Generate description
+    description_response = g4f.ChatCompletion.create(
+        model=g4f.models.gpt_35_turbo_16k_0613,
+        messages=[{"role": "user", "content": description_prompt}],
+    )
+
+    # Extract description from response
+    description = description_response.strip()  # Assuming description_response is a string
+
+    # Generate keywords
+    keywords = get_search_terms(video_subject, 6, script)  # Assuming you want 6 keywords
+
+    return title, description, keywords
