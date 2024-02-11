@@ -5,9 +5,21 @@ from typing import Tuple, List
 from termcolor import colored
 
 
+import re
+import json
+import g4f
+from typing import Tuple, List
+from termcolor import colored
+
+import re
+import json
+import g4f
+from typing import Tuple, List
+from termcolor import colored
+
 def generate_script(video_subject: str) -> str:
     """
-    Generate a script for a 2-minute short video about parallel universes.
+    Generate a script for a short video about parallel universes.
 
     Args:
         video_subject (str): The subject of the video.
@@ -18,26 +30,27 @@ def generate_script(video_subject: str) -> str:
 
     # Build prompt
     prompt = f"""
-    Generate a script for a 2-minute short video about {video_subject}.
-    Provide engaging content exploring the topic in depth.
+    Generate a script for a short video about {video_subject} within 1 minute.
+    Provide engaging content exploring the topic concisely.
 
     Ensure the script is in a continuous paragraph style without any scene descriptions, character actions, or dialogue tags.
     """
 
-    # Generate script
+    # Generate script with a maximum length for 1 minute duration
+    max_words_per_minute = 150  # Assuming an average speaking rate of 150 words per minute
+    max_script_length = max_words_per_minute  # Maximum words for 1 minute
     response = g4f.ChatCompletion.create(
         model=g4f.models.gpt_35_turbo_16k_0613,
         messages=[{"role": "user", "content": prompt}],
+        max_tokens=max_script_length  # Maximum tokens for GPT to generate
     )
 
     print(colored(response, "cyan"))
 
     # Return the generated script
     if response:
-        # Clean the script
-        response = clean_script(response)
-
-        return f"{response} "
+        print(colored(f"\nScript: {response}", "yellow"))
+        return response.strip()  # Return the generated script without any additional processing
     print(colored("[-] GPT returned an empty response.", "red"))
     return None
 
@@ -62,7 +75,7 @@ def clean_script(script: str) -> str:
 def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
     """
     Generate a JSON-Array of search terms for stock videos,
-    depending on the subject of a video.
+    depending on the subject and script of a video.
 
     Args:
         video_subject (str): The subject of the video.
@@ -70,21 +83,24 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
         script (str): The script of the video.
 
     Returns:
-        List[str]: The search terms for the video subject.
+        List[str]: The search terms for the video subject and script.
     """
 
-    # Build prompt
+    # Build prompt including the video subject and script
     prompt = f"""
     Generate {amount} search terms for stock videos,
-    depending on the subject of a 2-minute short video about {video_subject}.
+    based on the subject and script of a 1-minute short video about {video_subject}.
+    
+    Script:
+    {script}
+    
     Each search term should consist of 1-3 words,
-    always add the main subject of the video.
+    always adding the main subject of the video.
     
     YOU MUST ONLY RETURN THE JSON-ARRAY OF STRINGS.
     YOU MUST NOT RETURN ANYTHING ELSE. 
-    YOU MUST NOT RETURN THE SCRIPT.
     
-    The search terms must be related to the subject of the video.
+    The search terms must be related to the subject and content of the video script.
     """
 
     # Generate search terms
@@ -106,13 +122,15 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
             print(colored("[-] Could not parse response.", "red"))
 
         # Load the array into a JSON-Array
-        search_terms = json.loads(search_terms)
+        search_terms = json.loads(search_terms[0])
 
     # Let user know
     print(colored(f"\nGenerated {amount} search terms: {', '.join(search_terms)}", "cyan"))
 
     # Return search terms
     return search_terms
+
+
 
 def generate_metadata(video_subject: str, script: str) -> Tuple[str, str, List[str]]:
     """
