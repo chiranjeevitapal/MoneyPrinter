@@ -14,7 +14,6 @@ from typing import List
 from termcolor import colored
 from playsound import playsound
 
-
 VOICES = [
     # DISNEY VOICES
     "en_us_ghostface",  # Ghost Face
@@ -82,7 +81,7 @@ def split_string(string: str, chunk_size: int) -> List[str]:
     current_chunk = ""
     for word in words:
         if (
-            len(current_chunk) + len(word) + 1 <= chunk_size
+                len(current_chunk) + len(word) + 1 <= chunk_size
         ):  # Check if adding the word exceeds the chunk size
             current_chunk += f" {word}"
         else:
@@ -119,10 +118,10 @@ def generate_audio(text: str, voice: str) -> bytes:
 
 # creates an text to speech audio file
 def tts(
-    text: str,
-    voice: str = "none",
-    filename: str = "output.mp3",
-    play_sound: bool = False,
+        text: str,
+        voice: str = "none",
+        filename: str = "output.mp3",
+        play_sound: bool = False,
 ) -> None:
     # checking if the website is available
     global current_endpoint
@@ -134,7 +133,8 @@ def tts(
         if get_api_response().status_code == 200:
             print(colored("[+] TTS Service available!", "green"))
         else:
-            print(colored("[-] TTS Service not available and probably temporarily rate limited, try again later..." , "red"))
+            print(colored("[-] TTS Service not available and probably temporarily rate limited, try again later...",
+                          "red"))
             return
 
     # checking if arguments are valid

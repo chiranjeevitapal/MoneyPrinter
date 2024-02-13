@@ -4,7 +4,6 @@ import g4f
 from typing import Tuple, List
 from termcolor import colored
 
-
 import re
 import json
 import g4f
@@ -16,6 +15,7 @@ import json
 import g4f
 from typing import Tuple, List
 from termcolor import colored
+
 
 def generate_script(video_subject: str) -> str:
     """
@@ -129,7 +129,6 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
 
     # Return search terms
     return search_terms
-
 
 
 def generate_metadata(video_subject: str, script: str) -> Tuple[str, str, List[str]]:

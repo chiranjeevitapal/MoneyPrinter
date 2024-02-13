@@ -96,7 +96,7 @@ def generate():
             found_url = search_for_stock_videos(
                 search_term, os.getenv("PEXELS_API_KEY"), it, min_dur
             )
-            #check for duplicates
+            # check for duplicates
             for url in found_url:
                 if url not in video_urls:
                     video_urls.append(url)
@@ -180,7 +180,7 @@ def generate():
         except Exception as e:
             print(colored(f"[-] Error generating final video: {e}", "red"))
             final_video_path = None
-        
+
         # Start Youtube Uploader
         # Check if the CLIENT_SECRETS_FILE exists
         client_secrets_file = os.path.abspath("./client_secret.json")
@@ -188,7 +188,9 @@ def generate():
         if not os.path.exists(client_secrets_file):
             SKIP_YT_UPLOAD = True
             print(colored("[-] Client secrets file missing. YouTube upload will be skipped.", "yellow"))
-            print(colored("[-] Please download the client_secret.json from Google Cloud Platform and store this inside the /Backend directory.", "red"))
+            print(colored(
+                "[-] Please download the client_secret.json from Google Cloud Platform and store this inside the /Backend directory.",
+                "red"))
 
         # Only proceed with YouTube upload if the toggle is True  and client_secret.json exists.
         if automate_youtube_upload and not SKIP_YT_UPLOAD:
