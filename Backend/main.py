@@ -64,7 +64,7 @@ def generate():
             )
 
         # Generate a script
-        script = generate_script(data["videoSubject"])
+        script = generate_script(data["videoSubject"], data["maxVideoDuration"])
         voice = data["voice"]
 
         if not voice:

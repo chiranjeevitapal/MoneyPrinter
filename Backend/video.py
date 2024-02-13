@@ -157,7 +157,7 @@ def combine_videos(video_paths: List[str], max_duration: int) -> str:
         for video_path in video_paths:
             clip = VideoFileClip(video_path)
             clip = clip.without_audio()
-            # check if clip is longer than the remaning audio
+            # check if clip is longer than the remaining audio
             if (max_duration - tot_dur) < clip.duration:
                 clip = clip.subclip(0, (max_duration - tot_dur))
             # only shorten clips if the calculated clip length (req_dur) is shorter than the actual clip to prevent still image
@@ -165,17 +165,13 @@ def combine_videos(video_paths: List[str], max_duration: int) -> str:
                 clip = clip.subclip(0, req_dur)
             clip = clip.set_fps(30)
 
-            # Not all videos are same size,
-            # so we need to resize them
-            if round((clip.w / clip.h), 4) < 0.5625:
-                clip = crop(clip, width=clip.w, height=round(clip.w / 0.5625), \
-                            x_center=clip.w / 2, \
-                            y_center=clip.h / 2)
+            # Resize based on max_duration
+            if max_duration <= 60:
+                # Resize to vertical format for videos <= 1 minute
+                clip = clip.resize((1080, 1920))
             else:
-                clip = crop(clip, width=round(0.5625 * clip.h), height=clip.h, \
-                            x_center=clip.w / 2, \
-                            y_center=clip.h / 2)
-            clip = clip.resize((1080, 1920))
+                # Use standard YouTube resolution for longer videos
+                clip = clip.resize((1920, 1080))
 
             clips.append(clip)
             tot_dur += clip.duration
@@ -184,9 +180,10 @@ def combine_videos(video_paths: List[str], max_duration: int) -> str:
 
     final_clip = concatenate_videoclips(clips)
     final_clip = final_clip.set_fps(30)
-    final_clip.write_videofile(combined_video_path, threads=3)
+    final_clip.write_videofile(combined_video_path, threads=8) # On a 4 core machine 8 threads would be optimal.
 
     return combined_video_path
+
 
 
 def generate_video(combined_video_path: str, tts_path: str, subtitles_path: str) -> str:
@@ -222,6 +219,6 @@ def generate_video(combined_video_path: str, tts_path: str, subtitles_path: str)
     audio = AudioFileClip(tts_path)
     result = result.set_audio(audio)
 
-    result.write_videofile("../temp/output.mp4", threads=3)
+    result.write_videofile("../temp/output.mp4", threads=8)# On a 4 core machine 8 threads would be optimal.
 
     return "output.mp4"

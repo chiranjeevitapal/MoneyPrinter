@@ -57,10 +57,12 @@ $(document).ready(function () {
         const videoSubjectValue = $('#videoSubject').val();
         const voiceValue = $('#voice').val();
         const youtubeUpload = $('#youtubeUploadToggle').prop('checked');
+        const maxVideoDuration = $('#maxVideoDuration').val();
         const url = "http://localhost:8080/api/generate";
         const data = {
             videoSubject: videoSubjectValue,
             voice: voiceValue,
+            maxVideoDuration: maxVideoDuration,
             automateYoutubeUpload: youtubeUpload,
         };
         $.ajax({

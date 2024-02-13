@@ -1,23 +1,11 @@
-import re
-import json
 import g4f
-from typing import Tuple, List
-from termcolor import colored
-
-import re
 import json
-import g4f
-from typing import Tuple, List
-from termcolor import colored
-
 import re
-import json
-import g4f
-from typing import Tuple, List
 from termcolor import colored
+from typing import Tuple, List
 
 
-def generate_script(video_subject: str) -> str:
+def generate_script(video_subject: str, max_video_duration: int) -> str:
     """
     Generate a script for a short video about parallel universes.
 
@@ -30,14 +18,16 @@ def generate_script(video_subject: str) -> str:
 
     # Build prompt
     prompt = f"""
-    Generate a script for a short video about {video_subject} within 1 minute.
+    Generate a script for a short video about {video_subject} that could be read within {max_video_duration} minute.
     Provide engaging content exploring the topic concisely.
+    
+    YOU MUST ONLY RETURN A SINGLE PARAGRAPH WITHOUT ANY SPECIAL CHARACTERS AND UNWANTED SPACES.
 
     Ensure the script is in a continuous paragraph style without any scene descriptions, character actions, or dialogue tags.
     """
 
     # Generate script with a maximum length for 1 minute duration
-    max_words_per_minute = 150  # Assuming an average speaking rate of 150 words per minute
+    max_words_per_minute = 140  # Assuming an average speaking rate of 150 words per minute
     max_script_length = max_words_per_minute  # Maximum words for 1 minute
     response = g4f.ChatCompletion.create(
         model=g4f.models.gpt_35_turbo_16k_0613,
@@ -45,19 +35,19 @@ def generate_script(video_subject: str) -> str:
         max_tokens=max_script_length  # Maximum tokens for GPT to generate
     )
 
-    print(colored(response, "cyan"))
-
     # Return the generated script
     if response:
-        print(colored(f"\nScript: {response}", "yellow"))
-        return response.strip()  # Return the generated script without any additional processing
+        response = clean_script(response)
+        print(colored(f"\nScript: {response}", "green"))
+        return response
     print(colored("[-] GPT returned an empty response.", "red"))
     return None
 
 
 def clean_script(script: str) -> str:
     """
-    Clean the generated script by removing markdown syntax and special characters.
+    Clean the generated script by removing markdown syntax, special characters,
+    and unwanted spaces between sentences.
 
     Args:
         script (str): The generated script.
@@ -66,10 +56,12 @@ def clean_script(script: str) -> str:
         str: The cleaned script.
     """
     # Remove markdown syntax
-    script = re.sub(r'\[.*\]', '', script)
-    script = re.sub(r'\(.*\)', '', script)
-
+    script = re.sub(r'\[.*?\]', '', script)
+    script = re.sub(r'\(.*?\)', '', script)
+    # Remove special characters and unwanted spaces between sentences
+    script = re.sub(r'\s+', ' ', script)
     return script.strip()
+
 
 
 def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
