@@ -21,13 +21,13 @@ def generate_script(video_subject: str, max_video_duration: int) -> str:
     Generate a script for a short video about {video_subject} that could be read within {max_video_duration} minute.
     Provide engaging content exploring the topic concisely.
     
-    YOU MUST ONLY RETURN A SINGLE PARAGRAPH WITHOUT ANY SPECIAL CHARACTERS AND UNWANTED SPACES.
+    YOU MUST ONLY RETURN A SINGLE PARAGRAPH WITHOUT ANY SPECIAL CHARACTERS or UNWANTED SPACES.
 
     Ensure the script is in a continuous paragraph style without any scene descriptions, character actions, or dialogue tags.
     """
 
     # Generate script with a maximum length for 1 minute duration
-    max_words_per_minute = 140  # Assuming an average speaking rate of 150 words per minute
+    max_words_per_minute = 150  # Assuming an average speaking rate of 150 words per minute
     max_script_length = max_words_per_minute  # Maximum words for 1 minute
     response = g4f.ChatCompletion.create(
         model=g4f.models.gpt_35_turbo_16k_0613,
