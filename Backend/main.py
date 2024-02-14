@@ -57,6 +57,8 @@ def generate():
 
         # Parse JSON
         data = request.get_json()
+        custom_video_urls = data["customVideoUrls"]
+        print(custom_video_urls)
 
         # Get 'automateYoutubeUpload' from the request data and default to False if not provided
         automate_youtube_upload = data.get('automateYoutubeUpload', False)
@@ -75,7 +77,7 @@ def generate():
             )
 
         # Generate a script
-        script = generate_script(data["videoSubject"], data["maxVideoDuration"])
+        script = generate_script(data["videoSubject"])
         voice = data["voice"]
 
         if not voice:
@@ -95,23 +97,26 @@ def generate():
         min_dur = 10
         # Loop through all search terms,
         # and search for a video of the given search term
-        for search_term in search_terms:
-            if not GENERATING:
-                return jsonify(
-                    {
-                        "status": "error",
-                        "message": "Video generation was cancelled.",
-                        "data": [],
-                    }
+        if (len(custom_video_urls) > 0):
+            video_urls = custom_video_urls
+        else:
+            for search_term in search_terms:
+                if not GENERATING:
+                    return jsonify(
+                        {
+                            "status": "error",
+                            "message": "Video generation was cancelled.",
+                            "data": [],
+                        }
+                    )
+                found_url = search_for_stock_videos(
+                    search_term, os.getenv("PEXELS_API_KEY"), it, min_dur
                 )
-            found_url = search_for_stock_videos(
-                search_term, os.getenv("PEXELS_API_KEY"), it, min_dur
-            )
-            # check for duplicates
-            for url in found_url:
-                if url not in video_urls:
-                    video_urls.append(url)
-                    break
+                # check for duplicates
+                for url in found_url:
+                    if url not in video_urls:
+                        video_urls.append(url)
+                        break
 
         # Define video_paths
         video_paths = []
@@ -183,7 +188,7 @@ def generate():
 
         # Concatenate videos
         temp_audio = AudioFileClip(tts_path)
-        print(colored(f"[-] This video's play duration will be {temp_audio.duration} seconds", "cyan"))
+        print(colored(f"[+] >>>>>>> This video's play duration will be {temp_audio.duration} seconds <<<<<<<", "red"))
         combined_video_path = combine_videos(video_paths, temp_audio.duration)
 
         # Put everything together

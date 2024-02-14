@@ -5,7 +5,7 @@ from termcolor import colored
 from typing import Tuple, List
 
 
-def generate_script(video_subject: str, max_video_duration: int) -> str:
+def generate_script(video_subject: str) -> str:
     """
     Generate a script for a short video about parallel universes.
 
@@ -18,7 +18,7 @@ def generate_script(video_subject: str, max_video_duration: int) -> str:
 
     # Build prompt
     prompt = f"""
-    Generate a script for a short video about {video_subject} that could be read within {max_video_duration} minute.
+    Generate a script for a short video about {video_subject} that could be read within 1 minute.
     Provide engaging content exploring the topic concisely.
     
     YOU MUST ONLY RETURN A SINGLE PARAGRAPH WITHOUT ANY SPECIAL CHARACTERS or UNWANTED SPACES.
