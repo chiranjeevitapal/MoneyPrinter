@@ -49,6 +49,38 @@ $(document).ready(function () {
         voiceSelect.append(`<option value="${voice.value}">${voice.text}</option>`);
     });
 
+    $('#speakerIcon').click(function() {
+        const selectedVoice = $('#voice').val();
+        const url = "http://localhost:8080/api/render-voice-sample/" + selectedVoice;
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                // Decode base64 audio data
+                const base64AudioData = atob(response.data);
+                const arrayBuffer = new ArrayBuffer(base64AudioData.length);
+                const view = new Uint8Array(arrayBuffer);
+                for (let i = 0; i < base64AudioData.length; i++) {
+                    view[i] = base64AudioData.charCodeAt(i);
+                }
+                const blob = new Blob([arrayBuffer], { type: 'audio/mpeg' });
+                const url = URL.createObjectURL(blob);
+
+                // Create audio element
+                const audio = new Audio();
+                audio.src = url;
+                audio.play();
+            },
+            error: function (error) {
+                alert("An error occurred. Please try again later.");
+                console.log(error);
+            }
+        });
+    });
+
     // Generate video function
     $('#generateButton').click(function () {
         console.log("Generating video...");

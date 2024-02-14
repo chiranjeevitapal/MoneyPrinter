@@ -116,6 +116,24 @@ def generate_audio(text: str, voice: str) -> bytes:
     return response.content
 
 
+def generate_audio_base64(text: str, voice: str) -> str:
+    url = f"{ENDPOINTS[current_endpoint]}"
+    headers = {"Content-Type": "application/json"}
+    data = {"text": text, "voice": voice}
+    response = requests.post(url, headers=headers, json=data)
+
+    if response.status_code == 200:
+        if current_endpoint == 0:
+            audio_base64_data = str(response.content).split('"')[5]
+        else:
+            audio_base64_data = str(response.content).split('"')[3].split(",")[1]
+
+        return audio_base64_data
+    else:
+        # Handle error response
+        return "error"
+
+
 # creates an text to speech audio file
 def tts(
         text: str,

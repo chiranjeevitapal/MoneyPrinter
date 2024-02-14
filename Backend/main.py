@@ -32,6 +32,17 @@ AMOUNT_OF_STOCK_VIDEOS = 5
 GENERATING = False
 
 
+@app.route("/api/render-voice-sample/<voice>", methods=["GET"])
+def renderVoiceSample(voice):
+    return jsonify(
+        {
+            "status": "success",
+            "message": "Video generated! See temp/output.mp4 for result.",
+            "data": generate_audio_base64("Hello, how are you doing", voice)
+        }
+    )
+
+
 # Generation Endpoint
 @app.route("/api/generate", methods=["POST"])
 def generate():
@@ -172,6 +183,7 @@ def generate():
 
         # Concatenate videos
         temp_audio = AudioFileClip(tts_path)
+        print(colored(f"[-] This video's play duration will be {temp_audio.duration} seconds", "cyan"))
         combined_video_path = combine_videos(video_paths, temp_audio.duration)
 
         # Put everything together

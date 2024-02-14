@@ -165,13 +165,7 @@ def combine_videos(video_paths: List[str], max_duration: int) -> str:
                 clip = clip.subclip(0, req_dur)
             clip = clip.set_fps(30)
 
-            # Resize based on max_duration
-            if max_duration <= 60:
-                # Resize to vertical format for videos <= 1 minute
-                clip = clip.resize((1080, 1920))
-            else:
-                # Use standard YouTube resolution for longer videos
-                clip = clip.resize((1920, 1080))
+            clip = clip.resize((1080, 1920))
 
             clips.append(clip)
             tot_dur += clip.duration
@@ -180,10 +174,9 @@ def combine_videos(video_paths: List[str], max_duration: int) -> str:
 
     final_clip = concatenate_videoclips(clips)
     final_clip = final_clip.set_fps(30)
-    final_clip.write_videofile(combined_video_path, threads=8) # On a 4 core machine 8 threads would be optimal.
+    final_clip.write_videofile(combined_video_path, threads=4)
 
     return combined_video_path
-
 
 
 def generate_video(combined_video_path: str, tts_path: str, subtitles_path: str) -> str:
@@ -219,6 +212,6 @@ def generate_video(combined_video_path: str, tts_path: str, subtitles_path: str)
     audio = AudioFileClip(tts_path)
     result = result.set_audio(audio)
 
-    result.write_videofile("../temp/output.mp4", threads=8)# On a 4 core machine 8 threads would be optimal.
+    result.write_videofile("../temp/output.mp4", threads=4)
 
     return "output.mp4"
