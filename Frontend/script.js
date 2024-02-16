@@ -111,6 +111,8 @@ $(document).ready(function () {
             isValidUrls(videoUrlsString);
         }
         const customVideoUrls = videoUrlsString ? videoUrlsString.split(',').map(url => url.trim()) : [];
+        const customKeywordsString = $('#customKeywords').val();
+        const customKeywords = customKeywordsString ? customKeywordsString.split(',').map(url => url.trim()) : [];
         $('#generateButton').prop('disabled', true).addClass('hidden');
         $('#cancelButton').removeClass('hidden');
 
@@ -119,7 +121,8 @@ $(document).ready(function () {
             videoSubject: videoSubjectValue,
             voice: voiceValue,
             automateYoutubeUpload: youtubeUpload,
-            customVideoUrls: customVideoUrls
+            customVideoUrls: customVideoUrls,
+            customKeywords: customKeywords
         };
         $.ajax({
             type: "POST",

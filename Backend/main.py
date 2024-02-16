@@ -58,6 +58,7 @@ def generate():
         # Parse JSON
         data = request.get_json()
         custom_video_urls = data["customVideoUrls"]
+        custom_keywords = data["customKeywords"]
         print(custom_video_urls)
 
         # Get 'automateYoutubeUpload' from the request data and default to False if not provided
@@ -85,9 +86,14 @@ def generate():
             voice = "en_us_001"
 
         # Generate search terms
-        search_terms = get_search_terms(
-            data["videoSubject"], AMOUNT_OF_STOCK_VIDEOS, script
-        )
+        if len(custom_keywords) > 0:
+            search_terms = custom_keywords
+            print(colored("[+]Downloading with custom keywords provided by users...", "green"))
+            print(custom_keywords)
+        else:
+            search_terms = get_search_terms(
+                data["videoSubject"], AMOUNT_OF_STOCK_VIDEOS, script
+            )
 
         # Search for a video of the given search term
         video_urls = []
@@ -97,7 +103,7 @@ def generate():
         min_dur = 10
         # Loop through all search terms,
         # and search for a video of the given search term
-        if (len(custom_video_urls) > 0):
+        if len(custom_video_urls) > 0:
             video_urls = custom_video_urls
         else:
             for search_term in search_terms:
