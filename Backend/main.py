@@ -204,12 +204,6 @@ def generate():
             print(colored(f"[-] Error generating final video: {e}", "red"))
             final_video_path = None
 
-        print(colored(f"[+] >>>>>>> Generating title, description, keywords", "green"))
-        title, description, keywords = generate_metadata(data["videoSubject"], script)
-        print(colored(f"[+] >>>>>>> title = {title}", "blue"))
-        print(colored(f"[+] >>>>>>> description = {description}", "blue"))
-        print(colored(f"[+] >>>>>>> keywords = {keywords}", "blue"))
-
         # Start Youtube Uploader
         # Check if the CLIENT_SECRETS_FILE exists
         client_secrets_file = os.path.abspath("./client_secret.json")
