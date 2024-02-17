@@ -206,7 +206,7 @@ def generate_video(combined_video_path: str, tts_path: str, subtitles_path: str)
         txt,
         font="../fonts/bold_font.ttf",
         fontsize=100,
-        color="#FFFF00",
+        color="#FFFFFF",
         stroke_color="black",
         stroke_width=5,
     )
