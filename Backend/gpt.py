@@ -18,21 +18,17 @@ def generate_script(video_subject: str) -> str:
 
     # Build prompt
     prompt = f"""
-    Generate a script for a short video about {video_subject} that could be read within 1 minute.
+    Generate a script for a video about {video_subject}.
     Provide engaging content exploring the topic concisely.
     
-    YOU MUST ONLY RETURN A SINGLE PARAGRAPH WITHOUT ANY SPECIAL CHARACTERS or UNWANTED SPACES.
-
-    Ensure the script is in a continuous paragraph style without any scene descriptions, character actions, or dialogue tags.
+    Give some interesting, attention grabbing, intriguing paragraphs.
+    
+    Ensure the script is in a continuous paragraph style without any scene descriptions, narration, character actions, or dialogue tags.
     """
 
-    # Generate script with a maximum length for 1 minute duration
-    max_words_per_minute = 150  # Assuming an average speaking rate of 150 words per minute
-    max_script_length = max_words_per_minute  # Maximum words for 1 minute
     response = g4f.ChatCompletion.create(
         model=g4f.models.gpt_35_turbo_16k_0613,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=max_script_length  # Maximum tokens for GPT to generate
+        messages=[{"role": "user", "content": prompt}]
     )
 
     # Return the generated script
@@ -81,18 +77,17 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
     # Build prompt including the video subject and script
     prompt = f"""
     Generate {amount} search terms for stock videos,
-    based on the subject and script of a 1-minute short video about {video_subject}.
+    based on the subject and script about {video_subject}.
     
     Script:
     {script}
     
-    Each search term should consist of 1-3 words,
-    always adding the main subject of the video.
+    Each search term MUST consist of only one word.
+    THE SEARCH TERMS MUST BE RELATED TO THE SUBJECT AND CONTENT OF THE VIDEO SCRIPT. 
+    NEVER DEVIATE FROM THE CONTEXT OF THE SCRIPT.
     
     YOU MUST ONLY RETURN THE JSON-ARRAY OF STRINGS.
     YOU MUST NOT RETURN ANYTHING ELSE. 
-    
-    The search terms must be related to the subject and content of the video script.
     """
 
     # Generate search terms

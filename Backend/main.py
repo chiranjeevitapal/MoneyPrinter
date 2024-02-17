@@ -1,18 +1,18 @@
-import os
+from uuid import uuid4
+
+from apiclient.errors import HttpError
+from dotenv import load_dotenv
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from moviepy.config import change_settings
+from termcolor import colored
 
 from gpt import *
-from video import *
-from utils import *
 from search import *
-from uuid import uuid4
 from tiktokvoice import *
-from flask_cors import CORS
-from termcolor import colored
-from dotenv import load_dotenv
+from utils import *
+from video import *
 from youtube import upload_video
-from apiclient.errors import HttpError
-from flask import Flask, request, jsonify
-from moviepy.config import change_settings
 
 # Load environment variables
 load_dotenv("../.env")
@@ -28,7 +28,7 @@ CORS(app)
 # Constants
 HOST = "0.0.0.0"
 PORT = 8080
-AMOUNT_OF_STOCK_VIDEOS = 5
+AMOUNT_OF_STOCK_VIDEOS = 10
 GENERATING = False
 
 
@@ -203,6 +203,12 @@ def generate():
         except Exception as e:
             print(colored(f"[-] Error generating final video: {e}", "red"))
             final_video_path = None
+
+        print(colored(f"[+] >>>>>>> Generating title, description, keywords", "green"))
+        title, description, keywords = generate_metadata(data["videoSubject"], script)
+        print(colored(f"[+] >>>>>>> title = {title}", "blue"))
+        print(colored(f"[+] >>>>>>> description = {description}", "blue"))
+        print(colored(f"[+] >>>>>>> keywords = {keywords}", "blue"))
 
         # Start Youtube Uploader
         # Check if the CLIENT_SECRETS_FILE exists
