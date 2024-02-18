@@ -29,9 +29,9 @@
 </head>
 
 <body class="bg-blue-100 min-h-screen justify-center p-40">
-<h1 class="text-4xl text-center mb-4">Money Printer</h1>
+<h1 class="text-4xl text-center mb-4">TTS Generate</h1>
 <p class="text-center text-gray-700">
-    This Application is intended to automate the creation and uploads of YouTube Shorts.
+    This Application is intended to generate TTS
 </p>
 
 <div class="flex justify-center mt-8">
@@ -46,19 +46,6 @@
         <label for="videoSubject" class="text-blue-600">Subject</label>
         <textarea rows="3" type="text" name="videoSubject" id="videoSubject"
                   class="border-2 border-blue-300 p-2 rounded-md focus:outline-none focus:border-blue-500"></textarea>
-
-        <label for="videoURLs" class="text-blue-600">Custom Video URLs (Comma Separated)</label>
-        <textarea rows="3" type="text" name="videoURLs" id="videoURLs"
-                  class="border-2 border-blue-300 p-2 rounded-md focus:outline-none focus:border-blue-500"></textarea>
-
-        <label for="customKeywords" class="text-blue-600">Custom Keywords (Comma Separated)</label>
-        <textarea rows="3" type="text" name="customKeywords" id="customKeywords"
-                  class="border-2 border-blue-300 p-2 rounded-md focus:outline-none focus:border-blue-500"></textarea>
-
-        <label for="youtubeUploadToggle" class="flex items-center text-blue-600">
-            <input type="checkbox" name="youtubeUploadToggle" id="youtubeUploadToggle" class="mr-2"/>
-            Automate YouTube Uploads
-        </label>
         <button id="generateButton"
                 class="bg-blue-500 hover:bg-blue-700 duration-100 linear text-white px-4 py-2 rounded-md">
             Generate
