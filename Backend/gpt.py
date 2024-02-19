@@ -24,10 +24,11 @@ def generate_script(video_subject: str) -> str:
     YOU MUST ONLY RETURN A SINGLE PARAGRAPH WITHOUT ANY SPECIAL CHARACTERS or UNWANTED SPACES.
 
     Ensure the script is in a continuous paragraph style without any scene descriptions, character actions, or dialogue tags.
+    Ensure that the script is conclusive at the end.
     """
 
     # Generate script with a maximum length for 1 minute duration
-    max_words_per_minute = 150  # Assuming an average speaking rate of 150 words per minute
+    max_words_per_minute = 200  # Assuming an average speaking rate of 150 words per minute
     max_script_length = max_words_per_minute  # Maximum words for 1 minute
     response = g4f.ChatCompletion.create(
         model=g4f.models.gpt_35_turbo_16k_0613,
