@@ -92,6 +92,7 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
     
     YOU MUST ONLY RETURN THE JSON-ARRAY OF STRINGS.
     YOU MUST NOT RETURN ANYTHING ELSE. 
+    DONT RETURN SOMETHING THAT HAS ```json
     
     The search terms must be related to the subject and content of the video script.
     """
@@ -104,6 +105,7 @@ def get_search_terms(video_subject: str, amount: int, script: str) -> List[str]:
 
     # Load response into JSON-Array
     try:
+        print(colored(f"[*] GPT returned keywords. {response}", "yellow"))
         search_terms = json.loads(response)
     except Exception:
         print(colored("[*] GPT returned an unformatted response. Attempting to clean...", "yellow"))
